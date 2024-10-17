@@ -1,51 +1,67 @@
-# Connect-4-Reinforcement-learning
+# Connect-4 Reinforcement Learning Project
 
-# Background and Motivation:
-Connect Four is a two players game which takes place on a 7x6 rectangular board placed vertically between them. One player has 21 blue coins and the other 21 red coins. Each player can drop a coin at the top of the board in one of the seven columns; the coin falls down and fills the lower unoccupied square. Of course a player cannot drop a coin in a certain column if it's already full (i.e. it already contains six coins). 
-Even if there's no rule about who begins first, we assume, as in chess, that the lighter side makes the first move. We also use the chess notation to represent a square on the board. That is, we number rows from 1 to 7 starting from the bottom and the columns from 1 to 6 starting from the leftmost.
-# Problem statement
-   The rules of the game are as follows:
-   Every player tries to connect their coin type in a sequence of 4.
-     After every move by any player, the status of the game is checked whether it is over. 
-     A  game is considered over in the following scenarios:
-  Either of the players have 4 coins on the board in a sequence vertically, horizontally or   diagonally
-The board is full that is after 42 moves none of the players got a sequence of 4. In this case the game is a tie.
-Using the above rules, the problem statement is to develop an AI using Reinforcement Learning and train it to play with human players and try to maximize the number of wins by the AI.
-# Purpose/Motivation
-The purpose/ motivation of this project is mainly to identify and understand the difference in implementation and results of Connect 4 using AlphaGo, Monte Carlo Tree Search, Q Learning and DQN.
-# Differentiator/Contribution (what is different about your project from what is currently available in the literature)
-Connect 4 has already been implemented using AlphaGo and Monte Carlo Tree Search. We implemented the game using QLearning and DQN.
-# Methodology
-## Environment
-The connect 4 board
-## Agent
-To train the agent, select Train Computer in the main menu. It will play iterations games which was passed as an argument to the program.After training the computer, when 'vs Computer' option is selected, a human can play against the trained computer.Each time 'Train Computer' mode is selected, it trains from the beginning.
-The state space is all the states which each player sees. For the first player it consists all the boards with an even number of disks, while for the second player it is all the boards with an odd number of disks.The action space will be the numbers 1–7 for each column a player can play.The reward will be 1 for winning, -1 for losing, 0.5 for a tie and 0 otherwise.
-Note here that like in every 2-players’ game, the next state is not determined by the action taken because it depends also on the opponent’s action. The transition probability between 2 states depends on both the player’s and the opponent’s policies.
-## Policies
-The playing policy is e-greedy where the epsilon is chosen randomly.The epsilon factor determines whether to take a random move or an optimal move based on the Q function learnt.The discount factor decays after every iteration during training.In the beginning we have encouraged exploration (random values)Latter stage of training, we encouraged the computer to learn to play against more optimal players.
-## Q-Learning
-The state space is all the states which each player sees. For the first player it consists all the boards with even number of disks, while for the second player it is all the boards with odd number of disks.The action space will be the numbers 1–7 for each column a player can play.The reward will be 1 for winning, -1 for losing, 0.5 for a tie and 0 otherwise. The targets were calculated according to the Q learning algorithm:
-Q(s,a) = Q(s,a) + α(max(Q(s’,a’))+gR-Q(s,a)) where Q is the Q function, s is the state, a is the action, α is the learning rate, R is the reward and g is the discount factor.
-## DQN
-The Neural network to approximate the Q-value function.The state is given as the input and the Q-value of all possible actions is generated as the output.The loss function here is mean squared error of the predicted Q-value and the target Q-value – Q*. 
+## Background and Motivation
+Connect Four is a strategic, two-player game played on a 7x6 vertical grid. Each player has 21 tokens—one player uses blue, and the other uses red. Players alternate turns, dropping their tokens into one of the seven columns, where it falls to the lowest available position. Columns become unavailable when they are filled with six tokens.
 
-<img width="677" alt="Screen Shot 2020-03-01 at 12 19 15 AM" src="https://user-images.githubusercontent.com/41890348/75622168-66e5bf00-5b52-11ea-83b6-dca4a4cdada0.png">
-Experience replay has the largest performance improvement in DQN. Target network improvement is significant but not as critical as the replay. But it gets more important when the capacity of the network is small
+Although the game doesn't enforce who goes first, we assume that the lighter-colored tokens begin, much like in chess. We utilize chess-style notation to reference board positions, with rows numbered 1 to 7 (bottom to top) and columns numbered 1 to 6 (left to right).
 
-# DQN-Game Logic
-First, a game object is created with arguments like board_size.
-Next, two player objects are created which will play against each other. Every player object has its default brain which could be overridden by creating a custom brain object and assigning it to the player. Brain object is the place where the algorithms reside.
-Next, an environment object is created and two players along with the game objects are put in this environment by passing them as arguments.
-Finally, this environment is run which runs the game, takes actions from the players, and sends them back next state of the game and rewards of their actions.
-#Q-Learning Logic 
-Creating a class that represents an AI using Q-learning algorithm start by initialize a Q-learner with parameters epsilon, alpha and gamma and its coin type( 0 or 1). Then, get Q function returns a probability for a given state and action where the greater the probability the better the move. After that, choose action function will return an action based on the best move recommendation by the current Q-Table with an epsilon chance of trying out a new move.
-Lastly, learn function is to determine the reward based on its current chosen action and update the Q table using the reward received and the maximum future reward based on the resulting state due to the chosen action.
+## Problem Statement
+The primary objective is for each player to align four of their tokens in a row—vertically, horizontally, or diagonally. The game state is checked after each move, with the game ending under the following conditions:
+- A player connects four tokens in a straight line.
+- The board becomes fully occupied (42 moves) without a player connecting four, resulting in a draw.
 
-# Results
-<img width="546" alt="Screen Shot 2020-03-01 at 12 27 07 AM" src="https://user-images.githubusercontent.com/41890348/75622284-7dd8e100-5b53-11ea-9d8d-8b52c31e6fa1.png">
-<img width="613" alt="Screen Shot 2020-03-01 at 12 26 53 AM" src="https://user-images.githubusercontent.com/41890348/75622285-7f0a0e00-5b53-11ea-8ae3-c3c9ebdbb4c7.png">
-<img width="707" alt="Screen Shot 2020-03-01 at 12 24 58 AM" src="https://user-images.githubusercontent.com/41890348/75622286-803b3b00-5b53-11ea-912a-66e9f365351c.png">
+Our goal is to develop an AI using Reinforcement Learning techniques to play against human players, aiming to maximize its winning potential.
 
-# Conclusion
-One major challenge of DQNs with only win / loss conditions is measuring the network performance over time. We have found a few ways to do this, including having the agent play a short term reward maximizing symbolic AI every N games as validation. If  agent cannot beat an agent that only thinks in the short term, then we need to continue making changes to the network structure, hyper-parameters, and feature representation. Beating this short sighted AI consistently should be our first goal.We must also make sure our training data and labels are formatted in a way to ensure stability. Rewards should be normalized in the [-1., 1.] range, and any discounted future reward which is outside of this range should be clipped.Another factor to consider is the optimizer learning rate. A high learning rate can create instabilities in the neural networks state approximation behavior, resulting in all kinds of catastrophic forgetfulness. Starting at 0.001 is a good idea, and if you note instabilities with this try decreasing it from there. We find that 0.0001 works optimally for longer training sessions.
+## Purpose and Motivation
+This project aims to explore and analyze different AI strategies for Connect 4, specifically focusing on comparing AlphaGo, Monte Carlo Tree Search (MCTS), Q-Learning, and Deep Q-Networks (DQN).
+
+## Unique Contribution
+While previous Connect 4 implementations have primarily used AlphaGo and MCTS approaches, this project introduces the use of Q-Learning and DQN techniques to train the AI.
+
+## Methodology
+
+### Environment
+The AI operates within the standard Connect 4 grid.
+
+### Agent Training
+To train the AI agent, users can select the "Train Computer" mode. The program runs a specified number of training games, after which the AI is ready for human competition. Training resets each time this mode is selected. The state space includes all board states, with the first player seeing even token counts and the second player seeing odd counts. Possible actions are represented by the numbers 1 through 7, indicating the columns. Rewards are structured as follows: +1 for a win, -1 for a loss, 0.5 for a tie, and 0 for any other outcome.
+
+### Policies
+The AI follows an epsilon-greedy policy, where the epsilon value controls the balance between exploring random moves and exploiting the best-known moves from the Q-function. Early on, exploration is encouraged, but over time, the focus shifts to optimizing moves.
+
+### Q-Learning
+The AI leverages Q-Learning to update its strategy, using the following update formula:
+\[ Q(s, a) = Q(s, a) + \alpha (\text{max}(Q(s', a')) + \gamma R - Q(s, a)) \]
+where:
+- \( Q \) is the Q-value.
+- \( s \) is the current state.
+- \( a \) is the action taken.
+- \( \alpha \) is the learning rate.
+- \( R \) is the reward.
+- \( \gamma \) is the discount factor.
+
+### DQN (Deep Q-Network)
+The DQN approach uses a neural network to predict Q-values for each possible action. The board's state is fed into the network, which outputs the Q-values. The loss function measures the mean squared error between the predicted Q-values and the target values. Experience replay and a target network are employed to stabilize the training process.
+
+### Game Logic with DQN
+1. Create a game object with specified board parameters.
+2. Initialize two player objects, each with a customizable AI brain.
+3. Use an environment object to manage player actions and interactions with the game.
+4. Run the environment to play out the game, process moves, and update states.
+
+### Q-Learning Logic
+1. Initialize the AI using Q-Learning with parameters like epsilon, alpha, and gamma.
+2. Evaluate the best action using the Q-table for the current state.
+3. Update the Q-table based on received rewards and future state predictions to refine decision-making.
+
+## Results
+Below are visualizations illustrating the results from the Q-Learning and DQN approaches, showing the AI's performance under different scenarios:
+
+![Q-Learning Performance Graph](https://user-images.githubusercontent.com/41890348/75622168-66e5bf00-5b52-11ea-83b6-dca4a4cdada0.png)
+
+![DQN Training Loss](https://user-images.githubusercontent.com/41890348/75622284-7dd8e100-5b53-11ea-9d8d-8b52c31e6fa1.png)
+
+![DQN Performance Comparison](https://user-images.githubusercontent.com/41890348/75622285-7f0a0e00-5b53-11ea-8ae3-c3c9ebdbb4c7.png)
+
+## Conclusion
+A significant challenge with DQNs focused on win/loss conditions is evaluating progress. To address this, we suggest using a baseline AI that maximizes short-term gains for benchmarking. Stability in training is essential, requiring proper data formatting, reward normalization, and an appropriate learning rate (starting around 0.001). Fine-tuning these factors helps avoid instability and improves the AI's learning over longer training sessions.
