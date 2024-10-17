@@ -1,0 +1,2 @@
+model_checkpoint_path: "/home/sotirisnik/connect4/connect_4_model.ckpt"
+all_model_checkpoint_paths: "/home/sotirisnik/connect4/connect_4_model.ckpt"
